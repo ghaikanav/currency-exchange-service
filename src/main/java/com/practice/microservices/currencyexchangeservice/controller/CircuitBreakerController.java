@@ -1,5 +1,6 @@
 package com.practice.microservices.currencyexchangeservice.controller;
 
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
@@ -18,8 +19,10 @@ public class CircuitBreakerController {
     @GetMapping("/sample-api")
     // @Retry(name = "sample-api", fallbackMethod = "fallbackResponse")
     // @CircuitBreaker(name = "default")
-    @RateLimiter(name = "sample-api")
+    // @RateLimiter(name = "sample-api")
     // 10sec -> 2 calls for this API
+    @Bulkhead(name = "default")
+    // 10 concurrent calls
     public String sampleApi() {
         logger.info("Sample Api call received");
 //        ResponseEntity<String> forEntity = new RestTemplate()
